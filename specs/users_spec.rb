@@ -88,8 +88,6 @@ RSpec.describe('Users') do
           expect(response.code).to eq 201
           response_body = JSON.parse(response.body)
           expect(response_body['name']).to match /test_user_\d+/
-          puts response_body
-
           #TODO: add createdAt check
         end
       end
