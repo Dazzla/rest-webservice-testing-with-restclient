@@ -26,7 +26,16 @@ RSpec.describe('Users') do
         expect(response_body['data'][0].has_key? field)
       end
     end
-  end
+
+    it 'returns users with a delay' do
+      url = BASE_URL + '/users?delay=3'
+      response = RestClient.get(url)
+      response_body = JSON.parse(response)
+      expect(response.code).to eq 200
+      expect(response_body.has_key? 'data')
+    end
+
+    end
 
   describe 'retrieve single user' do
 
@@ -43,6 +52,7 @@ RSpec.describe('Users') do
         expect(response_body.has_key? field)
       end
     end
+
   end
 
   describe 'single user not found' do
@@ -59,7 +69,7 @@ RSpec.describe('Users') do
 
   end
 
-  context 'create, update, patch' do
+  context 'create, update, patch, delete' do
     let :url do
       BASE_URL + '/users'
     end
@@ -111,9 +121,19 @@ RSpec.describe('Users') do
           expect(response_body['job']).to eq 'UPDATE'
         end
       end
+
+      it 'deletes a user record' do
+        response = RestClient.post(url, post_body)
+        response_body = JSON.parse(response)
+        user_id = response_body['id']
+        RestClient.delete(url + "/" + user_id)
+        RestClient.get(url + "/" + user_id) do |response|
+          expect(response.code).to eq 404
+          expect(response.empty?)
+        end
+      end
     end
 
   end
-
 
 end
