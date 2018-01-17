@@ -13,13 +13,14 @@ RSpec.describe('Resources') do
     end
 
     it 'retrieves the resource list' do
-      response = RestClient.get(url)
-      response_body = JSON.parse(response)
-      expect(response.code).to eq 200
-      expect(response_body.has_key? 'data')
-      expect(response_body['data'][0].length).to be > 1
-      resource_fields.each do |field|
-        expect(response_body['data'][0].has_key? field)
+      RestClient.get(url)  do |response|
+        response_body = JSON.parse(response)
+        expect(response.code).to eq 200
+        expect(response_body.has_key? 'data')
+        expect(response_body['data'][0].length).to be > 1
+        resource_fields.each do |field|
+          expect(response_body['data'][0].has_key? field)
+        end
       end
     end
   end
@@ -31,12 +32,13 @@ RSpec.describe('Resources') do
     end
 
     it 'retrieves a single resource' do
-      response = RestClient.get(url)
-      response_body = JSON.parse(response)
-      expect(response.code).to eq 200
-      expect(response_body.has_key? 'data')
-      resource_fields.each do |field|
-        expect(response_body.has_key? field)
+      RestClient.get(url)  do |response|
+        response_body = JSON.parse(response)
+        expect(response.code).to eq 200
+        expect(response_body.has_key? 'data')
+        resource_fields.each do |field|
+          expect(response_body.has_key? field)
+        end
       end
     end
   end

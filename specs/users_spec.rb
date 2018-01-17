@@ -16,26 +16,30 @@ RSpec.describe('Users') do
     end
 
     it 'retrieves the user list' do
-      response = RestClient.get(url)
-      response_body = JSON.parse(response)
-      expect(response.code).to eq 200
-      expect(response_body.has_key? 'data')
-      expect(response_body['page']).to eq 2
-      expect(response_body['data'][0].length).to be > 1
-      user_fields.each do |field|
-        expect(response_body['data'][0].has_key? field)
+      RestClient.get(url)  do |response|
+        response_body = JSON.parse(response)
+        expect(response.code).to eq 200
+        expect(response_body.has_key? 'data')
+        expect(response_body['page']).to eq 2
+        expect(response_body['data'][0].length).to be > 1
+        user_fields.each do |field|
+          expect(response_body['data'][0].has_key? field)
+        end
       end
+
     end
 
     it 'returns users with a delay' do
       url = BASE_URL + '/users?delay=3'
-      response = RestClient.get(url)
+      RestClient.get(url)  do |response|
       response_body = JSON.parse(response)
-      expect(response.code).to eq 200
-      expect(response_body.has_key? 'data')
-    end
+        expect(response.code).to eq 200
+        expect(response_body.has_key? 'data')
+      end
 
     end
+
+  end
 
   describe 'retrieve single user' do
 
@@ -44,13 +48,15 @@ RSpec.describe('Users') do
     end
 
     it 'retrieves a single user' do
-      response = RestClient.get(url)
-      response_body = JSON.parse(response)
-      expect(response.code).to eq 200
-      expect(response_body.has_key? 'data')
-      user_fields.each do |field|
-        expect(response_body.has_key? field)
+      RestClient.get(url)  do |response|
+        response_body = JSON.parse(response)
+        expect(response.code).to eq 200
+        expect(response_body.has_key? 'data')
+        user_fields.each do |field|
+          expect(response_body.has_key? field)
+        end
       end
+
     end
 
   end
@@ -66,7 +72,6 @@ RSpec.describe('Users') do
         expect(response.empty?)
       end
     end
-
   end
 
   context 'create, update, patch, delete' do
@@ -103,31 +108,34 @@ RSpec.describe('Users') do
       end
 
       it 'put updates a user record' do
-        response = RestClient.post(url, post_body)
-        response_body = JSON.parse(response)
-        RestClient.put(url + "/" + response_body['id'], post_body) do |response, request, result|
+        RestClient.post(url, post_body) do |response|
           response_body = JSON.parse(response)
-          expect(response_body['job']).to eq 'UPDATE'
+          RestClient.put(url + "/" + response_body['id'], post_body) do |response|
+            response_body = JSON.parse(response)
+            expect(response_body['job']).to eq 'UPDATE'
+          end
         end
       end
 
       it 'patches a user record' do
-        response = RestClient.post(url, post_body)
-        response_body = JSON.parse(response)
-        RestClient.patch(url + "/" + response_body['id'], post_body) do |response, request, result|
+        RestClient.post(url, post_body) do |response|
           response_body = JSON.parse(response)
-          expect(response_body['job']).to eq 'UPDATE'
+          RestClient.patch(url + "/" + response_body['id'], post_body) do |response|
+            response_body = JSON.parse(response)
+            expect(response_body['job']).to eq 'UPDATE'
+          end
         end
       end
 
       it 'deletes a user record' do
-        response = RestClient.post(url, post_body)
-        response_body = JSON.parse(response)
-        user_id = response_body['id']
-        RestClient.delete(url + "/" + user_id)
-        RestClient.get(url + "/" + user_id) do |response|
-          expect(response.code).to eq 404
-          expect(response.empty?)
+        RestClient.post(url, post_body) do |response|
+          response_body = JSON.parse(response)
+          user_id = response_body['id']
+          RestClient.delete(url + "/" + user_id)
+          RestClient.get(url + "/" + user_id) do |response|
+            expect(response.code).to eq 404
+            expect(response.empty?)
+          end
         end
       end
     end

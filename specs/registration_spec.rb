@@ -17,7 +17,7 @@ RSpec.describe('Registration and Authentication') do
 
     it 'registers successfully' do
 
-      RestClient.post(url, post_body) do |response, request, result|
+      RestClient.post(url, post_body) do |response|
         response_body = JSON.parse(response)
         expect(response.code).to eq 201
         expect(response_body.has_key?('token'))
@@ -26,7 +26,7 @@ RSpec.describe('Registration and Authentication') do
     end
 
     it 'registers unsuccessfully' do
-      RestClient.post(url, post_body.delete('password')) do |response, request, result|
+      RestClient.post(url, post_body.delete('password')) do |response|
         expect(response).to eq '{"error":"Missing email or username"}'
       end
     end
@@ -51,7 +51,7 @@ RSpec.describe('Registration and Authentication') do
       end
 
       it 'logs in successfully' do
-        RestClient.post(url, successful_login_post) do |response, request, result|
+        RestClient.post(url, successful_login_post) do |response|
           expect(response.code).to eq 200
           response_body = JSON.parse(response)
           expect(response_body.has_key?('token'))
@@ -59,7 +59,7 @@ RSpec.describe('Registration and Authentication') do
       end
 
       it 'fails to log in' do
-        RestClient.post(url, unsuccessful_login_post) do |response, request, result|
+        RestClient.post(url, unsuccessful_login_post) do |response|
           response_body = JSON.parse(response)
           expect(response.code).to eq 400
           expect(response_body.has_key?('token'))
