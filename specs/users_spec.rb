@@ -3,6 +3,7 @@ require_relative '../specs/spec_helper'
 RSpec.describe('Users') do
 
   #TODO: This spec could be better. Needs to be tidied to reduce repetition and improve readability
+  #TODO: Mock service
 
   let :user_fields do
     [:id, :first_name, :last_name, :avatar]
@@ -50,12 +51,69 @@ RSpec.describe('Users') do
     end
 
     it 'returns an error for a non-existent user record' do
-      RestClient.get(url) do |response, request, result|
+      RestClient.get(url) do |response|
         expect(response.code).to eq 404
         expect(response.empty?)
       end
     end
 
   end
+
+  context 'create, update, patch' do
+    let :url do
+      BASE_URL + '/users'
+    end
+
+    describe 'create user' do
+
+      let :post_body do
+        {
+            'name': "test_user_#{rand((10)*1000).round(0)}",
+            'job': 'leader'
+        }
+      end
+
+      it 'successfully creates a user' do
+        RestClient.post(url, post_body) do |response|
+          expect(response.code).to eq 201
+          response_body = JSON.parse(response.body)
+          expect(response_body['name']).to match /test_user_\d+/
+          puts response_body
+
+          #TODO: add createdAt check
+        end
+      end
+
+    end
+
+    describe 'patch and update user' do
+      let :post_body do
+        {
+            'name': "test_user_#{rand((10)*1000).round(0)}",
+            'job': 'UPDATE'
+        }
+      end
+
+      it 'put updates a user record' do
+        response = RestClient.post(url, post_body)
+        response_body = JSON.parse(response)
+        RestClient.put(url + "/" + response_body['id'], post_body) do |response, request, result|
+          response_body = JSON.parse(response)
+          expect(response_body['job']).to eq 'UPDATE'
+        end
+      end
+
+      it 'patches a user record' do
+        response = RestClient.post(url, post_body)
+        response_body = JSON.parse(response)
+        RestClient.patch(url + "/" + response_body['id'], post_body) do |response, request, result|
+          response_body = JSON.parse(response)
+          expect(response_body['job']).to eq 'UPDATE'
+        end
+      end
+    end
+
+  end
+
 
 end

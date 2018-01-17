@@ -47,7 +47,7 @@ RSpec.describe('Resources') do
     end
 
     it 'returns an error for a non-existent resource' do
-      RestClient.get(url) do |response, request, result|
+      RestClient.get(url) do |response|
         expect(response.code).to eq 404
         expect(response.empty?)
       end
