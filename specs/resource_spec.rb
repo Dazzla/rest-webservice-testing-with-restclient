@@ -13,7 +13,7 @@ RSpec.describe('Resources') do
     end
 
     it 'retrieves the resource list' do
-      RestClient.get(url)  do |response|
+      RestClient.get(url) do |response|
         response_body = JSON.parse(response)
         expect(response.code).to eq 200
         expect(response_body.has_key? 'data')
@@ -32,7 +32,7 @@ RSpec.describe('Resources') do
     end
 
     it 'retrieves a single resource' do
-      RestClient.get(url)  do |response|
+      RestClient.get(url) do |response|
         response_body = JSON.parse(response)
         expect(response.code).to eq 200
         expect(response_body.has_key? 'data')

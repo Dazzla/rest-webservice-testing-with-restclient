@@ -16,7 +16,7 @@ RSpec.describe('Users') do
     end
 
     it 'retrieves the user list' do
-      RestClient.get(url)  do |response|
+      RestClient.get(url) do |response|
         response_body = JSON.parse(response)
         expect(response.code).to eq 200
         expect(response_body.has_key? 'data')
@@ -31,8 +31,8 @@ RSpec.describe('Users') do
 
     it 'returns users with a delay' do
       url = BASE_URL + '/users?delay=3'
-      RestClient.get(url)  do |response|
-      response_body = JSON.parse(response)
+      RestClient.get(url) do |response|
+        response_body = JSON.parse(response)
         expect(response.code).to eq 200
         expect(response_body.has_key? 'data')
       end
@@ -48,7 +48,7 @@ RSpec.describe('Users') do
     end
 
     it 'retrieves a single user' do
-      RestClient.get(url)  do |response|
+      RestClient.get(url) do |response|
         response_body = JSON.parse(response)
         expect(response.code).to eq 200
         expect(response_body.has_key? 'data')
@@ -82,10 +82,7 @@ RSpec.describe('Users') do
     describe 'create user' do
 
       let :post_body do
-        {
-            'name': "test_user_#{rand((10)*1000).round(0)}",
-            'job': 'leader'
-        }
+        {'name': "test_user_#{rand((10) * 1000).round(0)}", 'job': 'leader'}
       end
 
       it 'successfully creates a user' do
@@ -101,10 +98,7 @@ RSpec.describe('Users') do
 
     describe 'patch and update user' do
       let :post_body do
-        {
-            'name': "test_user_#{rand((10)*1000).round(0)}",
-            'job': 'UPDATE'
-        }
+        {'name': "test_user_#{rand((10) * 1000).round(0)}", 'job': 'UPDATE'}
       end
 
       it 'put updates a user record' do

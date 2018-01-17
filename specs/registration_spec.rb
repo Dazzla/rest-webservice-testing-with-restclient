@@ -9,10 +9,7 @@ RSpec.describe('Registration and Authentication') do
     end
 
     let :post_body do
-      {
-          'email': 'sydney@fife',
-          'password': 'pistol'
-      }
+      {'email': 'sydney@fife', 'password': 'pistol'}
     end
 
     it 'registers successfully' do
@@ -38,16 +35,11 @@ RSpec.describe('Registration and Authentication') do
       end
 
       let :successful_login_post do
-        {
-            "email": "test@example.com",
-            "password": "*********"
-        }
+        {'email': 'test@example.com', 'password': '*********'}
       end
 
       let :unsuccessful_login_post do
-        {
-            "password": "*********"
-        }
+        {'password': '*********'}
       end
 
       it 'logs in successfully' do
@@ -70,7 +62,6 @@ RSpec.describe('Registration and Authentication') do
     end
 
   end
-
 
 
 end
