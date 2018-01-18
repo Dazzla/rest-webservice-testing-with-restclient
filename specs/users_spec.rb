@@ -89,7 +89,7 @@ RSpec.describe('Users') do
         RestClient.post(url, post_body) do |response|
           expect(response.code).to eq 201
           response_body = JSON.parse(response.body)
-          expect(response_body['name']).to match /test_user_\d+/
+          expect(response_body['name']).to match(/test_user_\d+/)
           #TODO: add createdAt check
         end
       end
