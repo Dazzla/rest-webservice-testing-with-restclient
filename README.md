@@ -1,4 +1,4 @@
-##BJSS Demo spec tests
+##REST Webservice spec tests
 
 Run with:
 
